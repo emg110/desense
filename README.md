@@ -1,2 +1,10 @@
 # monash-hackathon-algorand-sensor-network
-This repository contains the code, content and demo material for participation of @emg110 and @sheghzo in Monash Blockchain Hackathon 2021
+This repository contains the code, content and demo material for participation of [@emg110](https://github.com/emg110) and [@sheghzo](https://github.com/sheghzo) in Monash Blockchain Hackathon 2021.
+
+## Usefull links
+
+> [Monash University](https://www.monash.edu)
+
+> [Monash University Blockchain Departement](https://www.monash.edu/blockchain)
+
+> [Algorand](https://www.algorand.com/)
