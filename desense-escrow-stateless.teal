@@ -1,0 +1,61 @@
+#pragma version 4
+b bacheck
+
+baxfer:
+txn AssetCloseTo
+addr ApplicationCreator
+==
+txn AssetAmount
+int 1
+==
+&&
+assert
+txn TypeEnum
+int axfer
+==
+txn AssetSender
+global ZeroAddress
+==
+&&
+assert
+int 1
+b fin
+
+bacfg:
+txn TypeEnum
+int acfg
+==
+b fin
+
+bacheck:
+gtxn 0 ApplicationID
+int appIdParam
+==
+txn GroupIndex
+int 1
+==
+&&
+gtxn 0 TypeEnum
+int appl
+==
+&&
+assert
+txn RekeyTo
+global ZeroAddress
+==
+assert
+txn Fee
+global MinTxnFee
+<=
+assert
+gtxna 0 ApplicationArgs 0
+byte "asa_cfg"
+==
+bnz bacfg
+gtxna 0 ApplicationArgs 0
+byte "asa-xfer"
+==
+bnz baxfer
+err
+
+fin:
