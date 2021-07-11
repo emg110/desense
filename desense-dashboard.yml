@@ -1,0 +1,101 @@
+runcharts:
+  - title: Sensors Observations
+    position: [[0, 0], [45, 19]]
+    rate-ms: 500
+    triggers:
+      - title: Latency threshold exceeded
+        condition: echo "$prev < 0.8 && $cur > 0.8" |bc -l
+        actions:
+            terminal-bell: true
+            sound: true
+            visual: true
+            script: 'say alert: ${label} latency exceeded ${cur} second'
+    legend:
+        enabled: true
+        details: false
+    scale: 2
+    items:
+      - label: Voltage
+        color: 178
+        sample: curl -o /dev/null -s -w '%{time_total}'  https://www.google.com
+      - label: Temprature
+        sample: curl -o /dev/null -s -w '%{time_total}'  https://search.yahoo.com
+      - label: Current
+        sample: curl -o /dev/null -s -w '%{time_total}'  https://www.bing.com
+barcharts:
+  - title: Sensor network blockchain activity
+    position: [[45, 20], [35, 8]]
+    rate-ms: 500
+    scale: 0
+    items:
+      - label: SENSE TRANSFER TXN
+        sample: echo "10000" | awk '{print $1}'
+      - label: SENSE APP CALL TXN
+        sample:  echo "10000" | awk '{print $1}'
+      - label: SENSE TOTAL TXN
+        sample:  echo "10000" | awk '{print $1}'
+  
+gauges:
+  - title: Voltage
+    position: [[45, 0], [35, 2]]
+    cur:
+        sample: date +%j
+    max:
+        sample: echo 365
+    min:
+        sample: echo 0
+  - title: Current
+    position: [[45, 3], [35, 2]]
+    cur:
+        sample: date +%H
+    max:
+        sample: echo 24
+    min:
+        sample: echo 0
+
+
+sparklines:
+  - title: CPU usage
+    position: [[0, 20], [22, 8]]
+    rate-ms: 200
+    scale: 0
+    sample: ps -A -o %cpu | awk '{s+=$1} END {print s}'
+  - title: Free memory pages
+    position: [[22, 20], [23, 8]]
+    rate-ms: 200
+    scale: 0
+    sample: memory_pressure | grep 'Pages free' | awk '{print $3}'
+textboxes:
+  - title: Docker containers stats
+    position: [[0, 29], [45, 10]]
+    rate-ms: 500
+    sample: docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.PIDs}}"
+  - title: Local weather
+    position: [[69, 31], [13, 7]]
+    rate-ms: 10000
+    sample: curl wttr.in?0ATQF
+    border: false
+  - title: Melbourne weather
+    position: [[45, 31], [13, 7]]
+    rate-ms: 10000
+    sample: curl wttr.in/melbourne?0ATQF
+    transform: echo 1
+    border: false
+  - title: Boston weather
+    position: [[56, 31], [13, 7]]
+    rate-ms: 10000
+    sample: curl wttr.in/boston?0ATQF
+    border: false
+asciiboxes:
+  - title: deSense
+    position: [[45, 6], [35, 9]]
+    rate-ms: 10000
+    sample: echo "deSense"
+    border: true
+    font: 2d
+  - title: UTC time
+    position: [[45, 12], [35, 9]]
+    rate-ms: 500
+    sample: env TZ=UTC date +%r
+    border: true
+    font: 2d
