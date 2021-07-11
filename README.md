@@ -9,8 +9,21 @@ This repository contains the code, content and demo material for participation o
 
 > [Algorand](https://www.algorand.com/)
 
+## Design Info
 
-## Based on amazing libraries
+> ![deSense Concept](./assets/deSense%20Concept.png)
+
+> ![deSense Sequences](./assets/deSense%20Sequences.png)
+
+> ![deSense UseCase Diagram](./assets/deSense%20UseCase.png)
+
+## Presentation
+
+> ![deSense Presentation Poster](./assets/dSense%20Presentation%20Poster.png)
+
+> [![deSense Presentation Poster](./assets/desense-dashboard.png)](./assets/dSense-video-presentation.webm)
+
+## Based on amazing libraries and examples of
 
 > [EmitterIO](https://www.monash.edu)
 
