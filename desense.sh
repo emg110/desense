@@ -1,23 +1,12 @@
 
 echo "
-  ___ __    ___   ___  ____  ___ __  ______        ___  ___  ___  __  __ ___  __ __  __    
- // \\||   // \\ // \\ || \\// \\||\ |||| \\       ||\\//|| // \\ ||\ ||// \\(( \||  ||   
- ||=||||  (( ___((   ))||_//||=||||\\||||  ))      || \/ ||((   ))||\\||||=|| \\ ||==||     
- || ||||__|\\_|| \\_// || \\|| |||| \||||_//       ||    || \\_// || \|||| ||\_))||  ||                                                                                                     
+   _       ___                    
+ _| | ___ / __> ___ ._ _  ___ ___ 
+/ . |/ ._>\__ \/ ._>| ' |<_-</ ._>
+\___|\___.<___/\___.|_|_|/__/\___.
+                                  
 "
-echo "    ___            ____                                       
-     `MM           6MMMMb                                     
-      MM          6M'    `                                     
-  ____MM   ____   MM         ____  ___  __     ____     ____   
- 6MMMMMM  6MMMMb  YM.       6MMMMb `MM 6MMb   6MMMMb  6MMMMb  
-6M'  `MM 6M'  `Mb  YMMMMb  6M'  `Mb MMM9 `Mb MM'    ` 6M'  `Mb 
-MM    MM MM    MM      `Mb MM    MM MM'   MM YM.      MM    MM 
-MM    MM MMMMMMMM       MM MMMMMMMM MM    MM  YMMMMb  MMMMMMMM 
-MM    MM MM             MM MM       MM    MM      Mb MM       
-YM.  ,MM YM    d9 L    ,M9 YM    d9 MM    MM L    ,MM YM    d9 
- YMMMMMM_ YMMMM9  MYMMMM9   YMMMM9 _MM_  _MM_MYMMMM9   YMMMM9  
-                                     
-"
+
 
 date '+ Running deSense | by @emg110 | %Y/%m/%d %H:%M:%S |'
 echo "----------------------------------------------------------------------------"
@@ -36,19 +25,49 @@ ACC=$( ${goalcli} account list | awk '{ print $3 }' | tail -1)
 APPROVAL_PROG="./desense-application-statefull.teal"
 CLEAR_PROG="./desense-clear-prog.teal"
 ESCROW_PROG="./desense-escrow-stateless.teal"
-
+#export EMITTER_LICENSE="PfA8IHtI_zkp1tEGEG3T86--Gy6bexPlMVxzi3o4_aEMGBCfEK7GTYaxmK6Zche0DLQfMDamuYnxC9XB9p8BAQ:3"
 case $1 in
 install)
-echo "Installing sandbox environment"
-cd "../" && git clone https://github.com/algorand/sandbox
-echo "Algorand Sandbox installed in parent folder (Beside current folder)"
-cd desense
+if [[ ! -d "../sandbox" ]]
+then
+    echo "Installing Algorand SandBox environment"
+    git clone https://github.com/algorand/sandbox.git ../emitter
+    echo "Algorand SandBox installed successfully in parent folder (Beside current folder)"
+else
+  echo "Angorand SandBox is installed OK!"
+fi
+if [[ ! -d "../sensor-emulator" ]]
+then
+    echo "Installing Sensor Emulator environment"
+    git clone https://github.com/emg110/sensor-emulator.git ../sensor-emulator
+    cd ../sensor-emulator
+    chmod +x emulator.sh
+    ./emulator.sh --h
+    cd ../desense
+    echo "Sensor Emulator installed successfully in parent folder (Beside current folder)"
+else
+  echo "Sensor Emulator is installed OK!"
+fi
+if [[ ! -d "../emitter" ]]
+then
+    echo "Installing EmitterIO"
+    git clone https://github.com/emitter-io/emitter ../emitter
+ 
+    cd ../emitter
+    go build
+    cd ../desense
+    ../emitter/emitter
+    echo "EmitterIO installed successfully in parent folder (Beside current folder)"
+else
+  echo "EmitterIO is installed OK!"
+fi
 ;;
 reset)
 echo "Reseting sandbox environment"
 rm -f desense-id.txt
 rm -f desense-escrow-stateless.txt
 rm -f desense-escrow-account.txt
+rm -f desense-escrow-prog-snd.teal
 rm -f desense-main-account.txt
 $sandboxcli reset
 ;;
@@ -64,6 +83,7 @@ asc)
 rm -f desense-id.txt
 rm -f desense-escrow-stateless.txt
 rm -f desense-escrow-account.txt
+rm -f desense-escrow-prog-snd.teal
 rm -f desense-main-account.txt
 cp "$APPROVAL_PROG" "$CLEAR_PROG" ../sandbox
 $sandboxcli copyTo "$APPROVAL_PROG"
@@ -78,8 +98,8 @@ APP=$(
     awk '{ print $NF }'
 )
 echo -ne "${APP}" > "desense-id.txt"
-cat $ESCROW_PROG | awk -v awk_var=${APP} '{ gsub("appIdParam", awk_var); print}' > "desense-escrow-stateless.teal"
-ESCROW_PROG_SND="desense-escrow-stateless.teal"
+cat $ESCROW_PROG | awk -v awk_var=${APP} '{ gsub("appIdParam", awk_var); print}' > "desense-escrow-stateless-snd.teal"
+ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
 $sandboxcli copyTo "$ESCROW_PROG_SND"
 ESCROW_ACCOUNT=$(
   ${goalcli} clerk compile -a ${ACC} -n ${ESCROW_PROG_SND} | awk '{ print $2 }' | head -n 1
@@ -144,7 +164,7 @@ ESCROW_ACC=$(cat "desense-escrow-account.txt" | head -n 1 | awk -v awk_var='' '{
 ESCROW_ACC_TRIM="${ESCROW_ACC//$'\r'/ }"
 APP_ID=$(cat "desense-id.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_var); print}')
 APP_ID_TRIM="${APP_ID//$'\r'/ }"
-ESCROW_PROG_SND="desense-escrow-stateless.teal"
+ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
 $sandboxcli copyTo "$ESCROW_PROG_SND"
 echo "Escrow account: $ESCROW_ACC_TRIM"
 echo "Main account: $MAIN_ACC"
@@ -222,7 +242,7 @@ echo "Escrow account: $ESCROW_ACC_TRIM"
 echo "Application ID:$APP_ID_TRIM"
 echo "The asset ID of SENSE, of which 1 (one) unit (SNS) will be transfered to main account: ${ASSET_ID%?}"
 
-ESCROW_PROG_SND="desense-escrow-stateless.teal"
+ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
 ${goalcli} asset send --assetid ${ASSET_ID%?} -f ${MAIN_ACC} -t ${MAIN_ACC} -a 0
 ${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:asa-xfer" -f ${MAIN_ACC} -o trx-get-asa-unsigned.tx
 $sandboxcli copyFrom "trx-get-asa-unsigned.tx"
