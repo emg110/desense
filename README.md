@@ -17,9 +17,11 @@ This repository contains the code, content and demo material for participation o
 
 > ![deSense UseCase Diagram](./assets/deSense%20UseCase.png)
 
-## Presentation
+## Presentation Poster
 
 > ![deSense Presentation Poster](./assets/dSense%20Presentation%20Poster.png)
+
+## Presentation Video
 
 > [![deSense Presentation Poster](./assets/desense-dashboard.png)](./assets/dSense-video-presentation.webm)
 
