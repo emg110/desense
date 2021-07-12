@@ -6,15 +6,17 @@
     "license": "PfA8IFBdtuVTr0jVVxHEI8uCYkoqt5wv6JMX3ooP_URrjwfwEAQkzNjfhs6n-eBy4NZzx5fp2cKtA-b08JYOAQ:3",
     "key":"bAsp5Kwp3BzXObBmjHl8erlN4_-FxYMj",
     "channel": "desense/",
-    "protocolId": "MQIsdp",
-    "protocolVersion": 3,
+    "algodToken":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "algodServer":"http://localhost",
+    "algodPort":"4001",
     "secure": false,
-    "passphrase": "vNEO42Tkhq7V",
     "tls": {
-          "key": "./certs/iotagent.key",
-          "cert": "./certs/iotagent.crt",
-          "ca": [ {"name": "./certs/ca.crt"} ]
-      }
+          "key": "./path_to_private_key",
+          "cert": "./path_to_certificate",
+          "ca": [ {"name": "./path_to_ca_certificate"} ]
+      },
+    "protocolId": "MQIsdp",
+    "protocolVersion": 3
     }
   },
   "device":{
