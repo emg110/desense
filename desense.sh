@@ -31,7 +31,7 @@ install)
 if [[ ! -d "../sandbox" ]]
 then
     echo "Installing Algorand SandBox environment"
-    git clone https://github.com/algorand/sandbox.git ../emitter
+    git clone https://github.com/algorand/sandbox.git ../sandbox
     echo "Algorand SandBox installed successfully in parent folder (Beside current folder)"
 else
   echo "Algorand SandBox is installed OK!"
@@ -39,7 +39,7 @@ fi
 if [[ ! -d "../sampler" ]]
 then
     echo "Installing Sampler Dashboard environment"
-    git clone https://github.com/algorand/sandbox.git ../emitter
+    git clone https://github.com/sqshq/sampler.git ../sampler
     echo "Sampler Dashboard successfully in parent folder (Beside current folder)"
 else
   echo "Sampler Dashboard is installed OK!"
