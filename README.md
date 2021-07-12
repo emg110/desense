@@ -18,8 +18,9 @@ This repository contains the code, content and demo material for participation o
 > Run `./desense.sh help` to see available flows and commands
 
 > When running `./desense.sh startemitter` for the first time you will be given just generated a license and a secret code for a new registered sensor netwrok on your localhost.
-![The license and secret key to generated Sensor Network](./assets/dSense%20Presentation%20Poster.png)
-
+![The license and secret key to generated Sensor Network](./assets/sns-license-scrshot.png)
+Open ypur browser and go to Sensor Network registeration panel `http://127.0.0.1:8080/keygen`
+![The license and secret key to generated Sensor Network](./assets/sns-keyreg-scrshot.png)
 > [Algorand](https://www.algorand.com/)
 
 ## Design Info
