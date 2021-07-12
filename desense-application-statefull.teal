@@ -70,7 +70,6 @@ assert
 gtxn 1 ConfigAssetName
 byte "SENSE"
 ==
-assert
 b end
 
 

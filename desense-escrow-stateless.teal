@@ -3,7 +3,7 @@ b bacheck
 
 baxfer:
 txn AssetCloseTo
-addr SENSEAddr
+global ZeroAddress
 ==
 txn AssetAmount
 int 1
