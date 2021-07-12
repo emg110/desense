@@ -13,6 +13,15 @@ This repository contains the code, content and demo material for participation o
 
 > [Algorand](https://www.algorand.com/)
 
+## Technical notes
+
+> Run `./desense.sh help` to see available flows and commands
+
+> When running `./desense.sh startemitter` for the first time you will be given just generated a license and a secret code for a new registered sensor netwrok on your localhost.
+![The license and secret key to generated Sensor Network](./assets/dSense%20Presentation%20Poster.png)
+
+> [Algorand](https://www.algorand.com/)
+
 ## Design Info
 
 > ![deSense Concept](./assets/deSense%20Concept.png)
@@ -31,8 +40,8 @@ This repository contains the code, content and demo material for participation o
 
 ## Based on amazing libraries and examples of
 
-> [EmitterIO](https://www.monash.edu)
+> [EmitterIO](https://github.com/emitter-io/emitter)
 
-> [Sampler](https://www.monash.edu/blockchain)
+> [Sampler](https://github.com/sqshq/sampler)
 
-> [Sensor-Emulator](https://www.algorand.com/)
+> [mqtt-emulator](https://github.com/dojot/mqtt-emulator)-----> Forked and extensively modified & overhauled version created just for this Hackathon [sensor-emulator](https://github.com/emg110/sensor-emulator)
