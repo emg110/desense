@@ -17,6 +17,10 @@ This repository contains the code, content and demo material for participation o
 
 > Run `./desense.sh help` to see available flows and commands
 
+> Run `./desense.sh install` first , then  `./desense.sh startsandbox`, then  `./desense.sh startemitter` and finally, then  `./desense.sh start emulator` as order of running things but read forward through technical notes first!
+
+> It'srecommended to run emitter and emulator in different bash terminals than main one, for they have continius logging of published and received sensor data which may interfere with user experience!
+
 > When running `./desense.sh startemitter` for the first time you will be given just generated a license and a secret code for a new registered sensor netwrok on your localhost.
 ![The license and secret key to generated Sensor Network](./assets/sns-license-scrshot.png)
 Take note of these two and set EMITTER_LICENSE environment variable:
