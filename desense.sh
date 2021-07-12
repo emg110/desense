@@ -61,6 +61,7 @@ then
 else
   echo "EmitterIO is installed OK!"
 fi
+cp sensor-template-config.json ../sensor-emulator
 ;;
 reset)
 echo "Reseting sandbox environment"
@@ -75,9 +76,18 @@ stop)
 echo "Stopping sandbox environment"
 $sandboxcli down
 ;;
-start)
+startsandbox)
 echo "Starting sandbox environment"
 $sandboxcli up
+;;
+startemitter)
+echo "Starting EmitterIO environment"
+../emitter/emitter
+;;
+startemulator)
+echo "Starting Sensor Emulator environment"
+cd ../sensor-emulator
+./emulator --run --config-file=sensor-template-config.json
 ;;
 asc)
 rm -f desense-id.txt
@@ -98,7 +108,7 @@ APP=$(
     awk '{ print $NF }'
 )
 echo -ne "${APP}" > "desense-id.txt"
-cat $ESCROW_PROG | awk -v awk_var=${APP} '{ gsub("appIdParam", awk_var); print}' > "desense-escrow-stateless-snd.teal"
+cat $ESCROW_PROG | awk -v awk_var=${APP} awk_var2=${ACC} '{ gsub("appIdParam", awk_var); gsub("SENSEAddr", awk_var2); print}' > "desense-escrow-stateless-snd.teal"
 ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
 $sandboxcli copyTo "$ESCROW_PROG_SND"
 ESCROW_ACCOUNT=$(
