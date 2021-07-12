@@ -3,9 +3,9 @@
     "mqtt":{
     "serverAddress": "localhost",
     "port": 8080,
-    "license": "PfA8IDhZsf4L_NEas4EAdl1RLEN0M4KAzn9eLOAdTQUfN8vNEO42Tkhq7VRYjE9d6NXAr5r14bH5DY7u28cNAQ:3",
-    "key":"JE8S_cKylZuNmM4W8TqpwFrsBWF291VF",
-    "topic": "/desense/",
+    "license": "PfA8IFBdtuVTr0jVVxHEI8uCYkoqt5wv6JMX3ooP_URrjwfwEAQkzNjfhs6n-eBy4NZzx5fp2cKtA-b08JYOAQ:3",
+    "key":"bAsp5Kwp3BzXObBmjHl8erlN4_-FxYMj",
+    "channel": "desense/",
     "protocolId": "MQIsdp",
     "protocolVersion": 3,
     "secure": false,
@@ -18,9 +18,9 @@
     }
   },
   "device":{
-    "frequency": 1000,
+    "frequency": 5000,
     "duration": 10000000,
-    "accelerate": 10,
+    "accelerate": 1,
     "sensors": [
         {"name": "temprature", "value": "UNIFORM(0, 100)"},
         {"name": "voltage", "value": "UNIFORM(85, 120)"},

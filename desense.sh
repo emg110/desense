@@ -61,7 +61,7 @@ then
 else
   echo "EmitterIO is installed OK!"
 fi
-cp sensor-template-config.json ../sensor-emulator
+
 ;;
 reset)
 echo "Reseting sandbox environment"
@@ -82,12 +82,14 @@ $sandboxcli up
 ;;
 startemitter)
 echo "Starting EmitterIO environment"
+#export EMITTER_LICENSE="PfA8IDhZsf4L_NEas4EAdl1RLEN0M4KAzn9eLOAdTQUfN8vNEO42Tkhq7VRYjE9d6NXAr5r14bH5DY7u28cNAQ:3"
 ../emitter/emitter
 ;;
 startemulator)
 echo "Starting Sensor Emulator environment"
-cd ../sensor-emulator
-./emulator --run --config-file=sensor-template-config.json
+echo "If this is thie first run, the genarted license and secret key are shown, please take note of them both and open your browser and go to localhost:8080 and generate channels and channel keys using the secret key you just noted. Do not forget to set EMITTER_LICENSE env variable before start after this run which gave you the keys to make the generated license work!"
+cp ./sensor-template-config.json ../sensor-emulator
+cd ../sensor-emulator && ./emulator.sh --run --config-file=sensor-template-config.json
 ;;
 asc)
 rm -f desense-id.txt

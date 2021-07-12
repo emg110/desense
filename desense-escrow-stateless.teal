@@ -3,7 +3,7 @@ b bacheck
 
 baxfer:
 txn AssetCloseTo
-addr ApplicationCreator
+addr SENSEAddr
 ==
 txn AssetAmount
 int 1
