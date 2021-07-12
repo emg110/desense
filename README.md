@@ -35,6 +35,9 @@ Use the channel key you just received from keygen and set it in key configuratio
 
 ![The sensor emulator configuration](./assets/sensor-emulator-config-scrshot.png)
 
+> If the setup is OK then by starting sensor emulator via `./desense startemulator` this should be the output:
+
+![The sensor emulator running...](./assets/startemulator.png)
 
 ## Design Info
 
