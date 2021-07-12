@@ -237,8 +237,6 @@ cd desense
 ;;
 
 axfer)
-ASSET_ID=0
-
 echo "Receiving Standard Asset..."
 MAIN_ACC=$(<desense-main-account.txt)
 ESCROW_ACC=$(cat "desense-escrow-account.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_var); print}')
@@ -247,14 +245,21 @@ APP_ID=$(cat "desense-id.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_v
 APP_ID_TRIM="${APP_ID//$'\r'/ }"
 
 
-ASSET_ID=$(${goalcli} account info -a ${ESCROW_ACC_TRIM} | grep ID | head -n 1 | awk '{ print $2 }')
-    echo "The Asset ID selected by auto mode is: ${ASSET_ID%?}"
+if [ $2 = "auto" ]; then
+    ASSET_ID=$(${goalcli} account info -a ${ESCROW_ACC_TRIM} | grep ID | head -n 1 | awk '{ print $2 }')
+    echo "The asset (SENSE) ID selected by auto mode is: ${ASSET_ID%?}"
+else
+    
+    ASSET_ID= $2
+    echo "Manual asset (SENSE) ID entering mode selected! Asset (SENSE) ID in request to be transfered (one unit only) ${ASSET_ID%?}"
+    echo -ne "${ASSET_ID%?}" > "desense-asset-index.txt" 
+fi
 
 echo "Escrow account: $ESCROW_ACC_TRIM"
 echo "Application ID:$APP_ID_TRIM"
-echo "The asset ID of SENSE, of which 1 (one) unit (SNS) will be transfered to main account: ${ASSET_ID%?}"
+echo "The asset (SENSE) ID from which 1 (one) unit will be transfered to main account: ${ASSET_ID%?}"
 
-ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
+ESCROW_PROG_SND="desense-escrow-stateless-snd.tea"
 ${goalcli} asset send --assetid ${ASSET_ID%?} -f ${MAIN_ACC} -t ${MAIN_ACC} -a 0
 ${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:asa-xfer" -f ${MAIN_ACC} -o trx-get-asa-unsigned.tx
 $sandboxcli copyFrom "trx-get-asa-unsigned.tx"
@@ -271,7 +276,7 @@ $sandboxcli copyFrom "trx-asa-transfer-signed-index-0.tx"
 $sandboxcli copyFrom "trx-asa-transfer-signed-index-1.tx"
 cat trx-asa-transfer-signed-index-0.tx trx-asa-transfer-signed-index-1.tx > trx-group-asa-transfer-signed.tx
 $sandboxcli copyTo "trx-group-asa-transfer-signed.tx"
-echo "Transfering one unit of deSense with clerk"
+echo "Transfering one unit of SENSE with clerk"
 ${goalcli} clerk rawsend -f trx-group-asa-transfer-signed.tx 
 rm -f *.tx
 rm -f *.rej
