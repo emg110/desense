@@ -25,7 +25,9 @@ ACC=$( ${goalcli} account list | awk '{ print $3 }' | tail -1)
 APPROVAL_PROG="./desense-application-statefull.teal"
 CLEAR_PROG="./desense-clear-prog.teal"
 ESCROW_PROG="./desense-escrow-stateless.teal"
-
+function getJsonVal () { 
+    python -c "import json,sys;sys.stdout.write(json.dumps(json.load(sys.stdin)$1, sort_keys=True, indent=4))"; 
+}
 case $1 in
 install)
 if [[ ! -d "../sandbox" ]]
@@ -302,7 +304,11 @@ trxlist)
 echo "listing transactions..."
 curl "localhost:8980/v2/transactions?pretty"
 ;;
+axferlist)
+echo "listing transactions..."
 
+curl  "localhost:8980/v2/transactions?pretty&tx-type=axfer"   | getJsonVal "['transactions']"
+;;
 status)
 echo "Getting node status from goal..."
 ${goalcli}  node status
