@@ -1,6 +1,6 @@
 {
   "protocol": {
-    "mqtt":{
+    "publish":{
     "serverAddress": "localhost",
     "port": 8080,
     "license": "PfA8IFBdtuVTr0jVVxHEI8uCYkoqt5wv6JMX3ooP_URrjwfwEAQkzNjfhs6n-eBy4NZzx5fp2cKtA-b08JYOAQ:3",
