@@ -19,9 +19,16 @@ This repository contains the code, content and demo material for participation o
 
 > When running `./desense.sh startemitter` for the first time you will be given just generated a license and a secret code for a new registered sensor netwrok on your localhost.
 ![The license and secret key to generated Sensor Network](./assets/sns-license-scrshot.png)
-Open ypur browser and go to Sensor Network registeration panel `http://127.0.0.1:8080/keygen` and register your channel name `/desense` to get a channel key
+Take note of these two and set EMITTER_LICENSE environment variable:
+
+`export EMITTER_LICENSE="PfA8IHtI_zkp1tEGEG3T86--Gy6bexPlMVxzi3o4_aEMGBCfEK7GTYaxmK6Zche0DLQfMDamuYnxC9XB9p8BAQ:3"`
+
+Open your browser and go to Sensor Network registeration panel `http://127.0.0.1:8080/keygen` and register your channel name `/desense` to get a channel key.
+
 ![Web based SNS channel generator & key registeration](./assets/sns-keyreg-scrshot.png)
+
 Use the channel key you just received from keygen and set it in key configuration of your sensor emulator `sensor-template-config.json`. Along with channel key set the port of your sensor network e.g 8080 and also paste the sensor network license mentioned above into the license configuration. Make sure you do these configurations before starting emulator with `./desense startemulator` command.
+
 ![The sensor emulator configuration](./assets/sensor-emulator-config-scrshot.png)
 
 
