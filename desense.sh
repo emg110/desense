@@ -25,7 +25,7 @@ ACC=$( ${goalcli} account list | awk '{ print $3 }' | tail -1)
 APPROVAL_PROG="./desense-application-statefull.teal"
 CLEAR_PROG="./desense-clear-prog.teal"
 ESCROW_PROG="./desense-escrow-stateless.teal"
-#export EMITTER_LICENSE="PfA8IHtI_zkp1tEGEG3T86--Gy6bexPlMVxzi3o4_aEMGBCfEK7GTYaxmK6Zche0DLQfMDamuYnxC9XB9p8BAQ:3"
+
 case $1 in
 install)
 if [[ ! -d "../sandbox" ]]
@@ -110,7 +110,7 @@ APP=$(
     awk '{ print $NF }'
 )
 echo -ne "${APP}" > "desense-id.txt"
-cat $ESCROW_PROG | awk -v awk_var=${APP} awk_var2=${ACC} '{ gsub("appIdParam", awk_var); gsub("SENSEAddr", awk_var2); print}' > "desense-escrow-stateless-snd.teal"
+cat $ESCROW_PROG | awk -v awk_var=${APP} '{ gsub("appIdParam", awk_var); print}' | awk -v awk_var=${ACC} '{ gsub("SENSEAddr", awk_var); print}' > "desense-escrow-stateless-snd.teal"
 ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
 $sandboxcli copyTo "$ESCROW_PROG_SND"
 ESCROW_ACCOUNT=$(
