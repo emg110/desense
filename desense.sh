@@ -34,7 +34,15 @@ then
     git clone https://github.com/algorand/sandbox.git ../emitter
     echo "Algorand SandBox installed successfully in parent folder (Beside current folder)"
 else
-  echo "Angorand SandBox is installed OK!"
+  echo "Algorand SandBox is installed OK!"
+fi
+if [[ ! -d "../sampler" ]]
+then
+    echo "Installing Sampler Dashboard environment"
+    git clone https://github.com/algorand/sandbox.git ../emitter
+    echo "Sampler Dashboard successfully in parent folder (Beside current folder)"
+else
+  echo "Sampler Dashboard is installed OK!"
 fi
 if [[ ! -d "../sensor-emulator" ]]
 then
@@ -82,14 +90,14 @@ $sandboxcli up
 ;;
 startemitter)
 echo "Starting EmitterIO environment"
-#export EMITTER_LICENSE="PfA8IDhZsf4L_NEas4EAdl1RLEN0M4KAzn9eLOAdTQUfN8vNEO42Tkhq7VRYjE9d6NXAr5r14bH5DY7u28cNAQ:3"
+
 ../emitter/emitter
 ;;
 startemulator)
 echo "Starting Sensor Emulator environment"
-echo "If this is thie first run, the genarted license and secret key are shown, please take note of them both and open your browser and go to localhost:8080 and generate channels and channel keys using the secret key you just noted. Do not forget to set EMITTER_LICENSE env variable before start after this run which gave you the keys to make the generated license work!"
-cp ./sensor-template-config.json ../sensor-emulator
-cd ../sensor-emulator && ./emulator.sh --run --config-file=sensor-template-config.json
+echo "If this is the first run, the generated license and secret key are shown, please take note of them both and open your browser and go to http://127.0.0.1:8080/keygen and generate channels and channel keys using the secret key you just noted. Do not forget to set EMITTER_LICENSE env variable before start after this run which gave you the keys to make the generated license work!"
+cp sensor-template-config.json ../sensor-emulator
+cd ../sensor-emulator && ./emulator.sh --DS --run  --config-file=sensor-template-config.json
 ;;
 asc)
 rm -f desense-id.txt
@@ -206,7 +214,7 @@ rm -f *.rej
 rm -f awk
 rm -f head
 rm -f *.scratch
-rm -f *.json
+rm -f trx-group-asa-signed-dryrun.json
 rm -f sed
 ;;
 
@@ -283,7 +291,6 @@ rm -f *.rej
 rm -f awk
 rm -f head
 rm -f *.scratch
-rm -f *.json
 rm -f sed
 ;;
 trxlist)
