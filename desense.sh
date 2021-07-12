@@ -184,7 +184,7 @@ echo "Application ID:$APP_ID_TRIM"
 echo "The asset name: SENSE"
 ${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:asa_cfg" -f ${MAIN_ACC} -o trx-call-app-unsigned.tx
 $sandboxcli copyFrom "trx-call-app-unsigned.tx"
-${goalcli} asset create --creator ${ESCROW_ACC_TRIM} --name "SENSE" --total 99999999 --decimals 0 -o trx-create-asa-unsigned.tx
+${goalcli} asset create --creator ${ESCROW_ACC_TRIM} --name "SENSE" --total 999999999 --asseturl "https://github.com/emg110/desense" --unitname "SNS" --decimals 6 -o trx-create-asa-unsigned.tx
 $sandboxcli copyFrom "trx-create-asa-unsigned.tx"
 cat trx-call-app-unsigned.tx trx-create-asa-unsigned.tx > trx-array-asa-unsigned.tx
 $sandboxcli copyTo "trx-array-asa-unsigned.tx"
