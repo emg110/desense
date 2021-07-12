@@ -49,11 +49,11 @@ global MinTxnFee
 <=
 assert
 gtxna 0 ApplicationArgs 0
-byte "asa_cfg"
+byte "sense_cfg"
 ==
 bnz bacfg
 gtxna 0 ApplicationArgs 0
-byte "asa-xfer"
+byte "sense-xfer"
 ==
 bnz baxfer
 err

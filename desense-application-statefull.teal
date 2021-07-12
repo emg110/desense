@@ -25,11 +25,11 @@ byte "escrow_set"
 ==
 bnz bescset
 txna ApplicationArgs 0
-byte "asa_cfg"
+byte "sense_cfg"
 ==
 bnz bacfg
 txna ApplicationArgs 0
-byte "asa-xfer"
+byte "sense-xfer"
 ==
 bnz bxfer
 b finerr

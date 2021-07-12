@@ -176,7 +176,7 @@ echo "Application ID:$APP_ID_TRIM"
 ${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:escrow_set" --app-arg "addr:${ESCROW_ACC_TRIMM}" -f ${MAIN_ACC}
 ${goalcli} app read --app-id ${APP_ID_TRIM} --guess-format --global --from ${MAIN_ACC}
 ;;
-asa)
+sense)
 echo "Generating SENSE Standard Asset..."
 
 MAIN_ACC=$(<desense-main-account.txt)
@@ -190,46 +190,46 @@ echo "Escrow account: $ESCROW_ACC_TRIM"
 echo "Main account: $MAIN_ACC"
 echo "Application ID:$APP_ID_TRIM"
 echo "The asset name: SENSE"
-${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:asa_cfg" -f ${MAIN_ACC} -o trx-call-app-unsigned.tx
+${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:sense_cfg" -f ${MAIN_ACC} -o trx-call-app-unsigned.tx
 $sandboxcli copyFrom "trx-call-app-unsigned.tx"
-${goalcli} asset create --creator ${ESCROW_ACC_TRIM} --name "SENSE" --total 999999999999999 --asseturl "https://github.com/emg110/desense" --unitname "SNS" --decimals 6 -o trx-create-asa-unsigned.tx
-$sandboxcli copyFrom "trx-create-asa-unsigned.tx"
-cat trx-call-app-unsigned.tx trx-create-asa-unsigned.tx > trx-array-asa-unsigned.tx
-$sandboxcli copyTo "trx-array-asa-unsigned.tx"
-${goalcli} clerk group -i trx-array-asa-unsigned.tx -o group-trx-asa-unsigned.tx
-$sandboxcli copyFrom "group-trx-asa-unsigned.tx"
-${goalcli} clerk split -i group-trx-asa-unsigned.tx -o trx-asa-unsigned-index.tx
-$sandboxcli copyFrom "trx-asa-unsigned-index-0.tx"
-$sandboxcli copyFrom "trx-asa-unsigned-index-1.tx"
-${goalcli} clerk sign -i trx-asa-unsigned-index-0.tx -o trx-asa-signed-index-0.tx
-$sandboxcli copyFrom "trx-asa-signed-index-0.tx"
-${goalcli} clerk sign -i trx-asa-unsigned-index-1.tx -p ${ESCROW_PROG_SND} -o trx-asa-signed-index-1.tx
-$sandboxcli copyFrom "trx-asa-signed-index-1.tx"
-cat trx-asa-signed-index-0.tx trx-asa-signed-index-1.tx > trx-group-asa-signed.tx
-$sandboxcli copyTo "trx-group-asa-signed.tx"
+${goalcli} asset create --creator ${ESCROW_ACC_TRIM} --name "SENSE" --total 999999999999999 --asseturl "https://github.com/emg110/desense" --unitname "SNS" --decimals 6 -o trx-create-sense-unsigned.tx
+$sandboxcli copyFrom "trx-create-sense-unsigned.tx"
+cat trx-call-app-unsigned.tx trx-create-sense-unsigned.tx > trx-array-sense-unsigned.tx
+$sandboxcli copyTo "trx-array-sense-unsigned.tx"
+${goalcli} clerk group -i trx-array-sense-unsigned.tx -o group-trx-sense-unsigned.tx
+$sandboxcli copyFrom "group-trx-sense-unsigned.tx"
+${goalcli} clerk split -i group-trx-sense-unsigned.tx -o trx-sense-unsigned-index.tx
+$sandboxcli copyFrom "trx-sense-unsigned-index-0.tx"
+$sandboxcli copyFrom "trx-sense-unsigned-index-1.tx"
+${goalcli} clerk sign -i trx-sense-unsigned-index-0.tx -o trx-sense-signed-index-0.tx
+$sandboxcli copyFrom "trx-sense-signed-index-0.tx"
+${goalcli} clerk sign -i trx-sense-unsigned-index-1.tx -p ${ESCROW_PROG_SND} -o trx-sense-signed-index-1.tx
+$sandboxcli copyFrom "trx-sense-signed-index-1.tx"
+cat trx-sense-signed-index-0.tx trx-sense-signed-index-1.tx > trx-group-sense-signed.tx
+$sandboxcli copyTo "trx-group-sense-signed.tx"
 echo "Sending signed transaction group with clerk..."
-${goalcli} clerk rawsend -f trx-group-asa-signed.tx
+${goalcli} clerk rawsend -f trx-group-sense-signed.tx
 rm -f *.tx
 rm -f *.rej
 rm -f awk
 rm -f head
 rm -f *.scratch
-rm -f trx-group-asa-signed-dryrun.json
+rm -f trx-group-sense-signed-dryrun.json
 rm -f sed
 ;;
 
 dryrun)
 echo "Creating Dry-run dump from signed transaction group..."
-${goalcli} clerk dryrun -t trx-group-asa-signed.tx --dryrun-dump -o trx-group-asa-signed-dryrun.json
-$sandboxcli copyFrom "trx-group-asa-signed-dryrun.json"
+${goalcli} clerk dryrun -t trx-group-sense-signed.tx --dryrun-dump -o trx-group-sense-signed-dryrun.json
+$sandboxcli copyFrom "trx-group-sense-signed-dryrun.json"
 echo "Dryrun dump JSON file generated successfully!"
 ;;
 
 drapproval)
 echo "Dry-running signed approval program with signed transaction group ..."
-${goalcli} clerk dryrun -t trx-group-asa-signed.tx --dryrun-dump -o trx-group-asa-signed-dryrun.json
-$sandboxcli copyFrom "trx-group-asa-signed-dryrun.json"
-cd "../" && docker exec -it algorand-sandbox-algod  tealdbg debug ${APPROVAL_PROG} -f cdt --listen 0.0.0.0 -d trx-group-asa-signed-dryrun.json --group-index 0
+${goalcli} clerk dryrun -t trx-group-sense-signed.tx --dryrun-dump -o trx-group-sense-signed-dryrun.json
+$sandboxcli copyFrom "trx-group-sense-signed-dryrun.json"
+cd "../" && docker exec -it algorand-sandbox-algod  tealdbg debug ${APPROVAL_PROG} -f cdt --listen 0.0.0.0 -d trx-group-sense-signed-dryrun.json --group-index 0
 echo "The Dry run JSON file is running to check Approval Smart Contract"
 cd desense
 
@@ -237,9 +237,9 @@ cd desense
 ;;
 drescrow)
 echo "Dry-running signed approval program with signed transaction group..."
-${goalcli} clerk dryrun -t trx-group-asa-signed.tx --dryrun-dump -o trx-group-asa-signed-dryrun.json
-$sandboxcli copyFrom "trx-group-asa-signed-dryrun.json"
-cd "../" && docker exec -it  algorand-sandbox-algod tealdbg debug ${ESCROW_PROG_SND} -f cdt --listen 0.0.0.0 -d trx-group-asa-signed-dryrun.json
+${goalcli} clerk dryrun -t trx-group-sense-signed.tx --dryrun-dump -o trx-group-sense-signed-dryrun.json
+$sandboxcli copyFrom "trx-group-sense-signed-dryrun.json"
+cd "../" && docker exec -it  algorand-sandbox-algod tealdbg debug ${ESCROW_PROG_SND} -f cdt --listen 0.0.0.0 -d trx-group-sense-signed-dryrun.json
 echo "The Dry run JSON file is running to check Stateful Approval Smart Contract..."
 cd desense
 ;;
@@ -269,23 +269,23 @@ echo "The asset (SENSE) ID from which 1 (one) unit will be transfered to main ac
 
 ESCROW_PROG_SND="desense-escrow-stateless-snd.tea"
 ${goalcli} asset send --assetid ${ASSET_ID%?} -f ${MAIN_ACC} -t ${MAIN_ACC} -a 0
-${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:asa-xfer" -f ${MAIN_ACC} -o trx-get-asa-unsigned.tx
-$sandboxcli copyFrom "trx-get-asa-unsigned.tx"
-${goalcli} asset send --assetid ${ASSET_ID%?} -f ${ESCROW_ACC_TRIM} -t ${MAIN_ACC} -a 1 -o trx-send-asa-unsigned.tx
-$sandboxcli copyFrom "trx-send-asa-unsigned.tx"
-cat trx-get-asa-unsigned.tx trx-send-asa-unsigned.tx > trx-array-asa-transfer-unsigned.tx
-$sandboxcli copyTo "trx-array-asa-transfer-unsigned.tx"
-${goalcli} clerk group -i trx-array-asa-transfer-unsigned.tx -o trx-group-asa-transfer-unsigned.tx
-$sandboxcli copyFrom "trx-group-asa-transfer-unsigned.tx"
-${goalcli} clerk split -i trx-group-asa-transfer-unsigned.tx -o trx-asa-transfer-unsigned-index.tx
-${goalcli} clerk sign -i trx-asa-transfer-unsigned-index-0.tx -o trx-asa-transfer-signed-index-0.tx
-${goalcli} clerk sign -i trx-asa-transfer-unsigned-index-1.tx -p ${ESCROW_PROG_SND} -o trx-asa-transfer-signed-index-1.tx
-$sandboxcli copyFrom "trx-asa-transfer-signed-index-0.tx"
-$sandboxcli copyFrom "trx-asa-transfer-signed-index-1.tx"
-cat trx-asa-transfer-signed-index-0.tx trx-asa-transfer-signed-index-1.tx > trx-group-asa-transfer-signed.tx
-$sandboxcli copyTo "trx-group-asa-transfer-signed.tx"
+${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:sense-xfer" -f ${MAIN_ACC} -o trx-get-sense-unsigned.tx
+$sandboxcli copyFrom "trx-get-sense-unsigned.tx"
+${goalcli} asset send --assetid ${ASSET_ID%?} -f ${ESCROW_ACC_TRIM} -t ${MAIN_ACC} -a 1 -o trx-send-sense-unsigned.tx
+$sandboxcli copyFrom "trx-send-sense-unsigned.tx"
+cat trx-get-sense-unsigned.tx trx-send-sense-unsigned.tx > trx-array-sense-transfer-unsigned.tx
+$sandboxcli copyTo "trx-array-sense-transfer-unsigned.tx"
+${goalcli} clerk group -i trx-array-sense-transfer-unsigned.tx -o trx-group-sense-transfer-unsigned.tx
+$sandboxcli copyFrom "trx-group-sense-transfer-unsigned.tx"
+${goalcli} clerk split -i trx-group-sense-transfer-unsigned.tx -o trx-sense-transfer-unsigned-index.tx
+${goalcli} clerk sign -i trx-sense-transfer-unsigned-index-0.tx -o trx-sense-transfer-signed-index-0.tx
+${goalcli} clerk sign -i trx-sense-transfer-unsigned-index-1.tx -p ${ESCROW_PROG_SND} -o trx-sense-transfer-signed-index-1.tx
+$sandboxcli copyFrom "trx-sense-transfer-signed-index-0.tx"
+$sandboxcli copyFrom "trx-sense-transfer-signed-index-1.tx"
+cat trx-sense-transfer-signed-index-0.tx trx-sense-transfer-signed-index-1.tx > trx-group-sense-transfer-signed.tx
+$sandboxcli copyTo "trx-group-sense-transfer-signed.tx"
 echo "Transfering one unit of SENSE with clerk"
-${goalcli} clerk rawsend -f trx-group-asa-transfer-signed.tx 
+${goalcli} clerk rawsend -f trx-group-sense-transfer-signed.tx 
 rm -f *.tx
 rm -f *.rej
 rm -f awk
@@ -316,7 +316,7 @@ echo "                "
 echo "3- ./desense.sh link"
 echo "To link deSense stateful contract application with deSense stateless contract escrow account" 
 echo "                "
-echo "4- ./desense.sh asa"
+echo "4- ./desense.sh sense"
 echo "To generate SENSE Algorand standard asset" 
 echo "                "
 echo "5- ./desense.sh escrow"
