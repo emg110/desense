@@ -25,8 +25,9 @@ APPROVAL_PROG="./desense-application-statefull.teal"
 CLEAR_PROG="./desense-clear-prog.teal"
 ESCROW_PROG="./desense-escrow-stateless.teal"
 function getDecoded () { 
-    python -c "import sys,base64; print sys.stdin.read().decode('base64').decode('base64')"; 
+    python -c "import sys,base64,json; x=sys.stdin.read().decode('base64').decode('base64'); sys.stdout.write(x)" 
 }
+
 case $1 in
 install)
 sudo apt update
@@ -90,6 +91,7 @@ rm -f head
 rm -f *.scratch
 rm -f trx-group-sense-signed-dryrun.json
 rm -f sed
+rm -f python
 $sandboxcli reset
 ;;
 stop)
@@ -233,6 +235,7 @@ rm -f head
 rm -f *.scratch
 rm -f trx-group-sense-signed-dryrun.json
 rm -f sed
+rm -f python
 ;;
 
 dryrun)
@@ -284,8 +287,8 @@ fi
 echo "Escrow account: $ESCROW_ACC_TRIM"
 echo "Application ID:$APP_ID_TRIM"
 echo "The asset (SENSE) ID from which 1 (one) unit will be transfered to main account: ${ASSET_ID_FINAL}"
-NOTEOPT=$(echo -n "{'SENSE': 'optin'}" | base64)
-NOTEACT=$(echo -n "{'SENSE': 'activate'}" | base64)
+NOTEOPT=$(printf '{"sense": "optin"}' | base64)
+NOTEACT=$(printf '{"sense": "activate"}' | base64)
 echo "${NOTEOPT}"
 ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
 ${goalcli} asset send --assetid ${ASSET_ID_FINAL} -f ${MAIN_ACC} -t ${MAIN_ACC} -a 0 --note "${NOTEOPT}"
@@ -312,18 +315,18 @@ rm -f awk
 rm -f head
 rm -f *.scratch
 rm -f sed
+rm -f python
 ;;
 trxlist)
 echo "listing transactions..."
-curl  -s "localhost:8980/v2/transactions?pretty"
+curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer"
 ;;
 axferlist)
 echo "listing notes..."
 
-RES=$(echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | last' | getDecoded)
 
 
-echo $RES
+echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | first' | getDecoded | jq '.sense'
 ;;
 status)
 echo "Getting node status from goal..."
