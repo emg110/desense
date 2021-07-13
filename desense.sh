@@ -196,7 +196,7 @@ echo "Main account:$MAIN_ACC"
 echo "        "
 ${goalcli} account balance -a $MAIN_ACC
 ;;
-escrow)
+sensors)
 echo "Getting the escrow account info..."
 echo "        "
 ESCROW_ACC=$(cat "desense-escrow-account.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_var); print}')
@@ -462,7 +462,7 @@ echo "                "
 echo "4- ./desense.sh sense"
 echo "To generate SENSE Algorand standard asset" 
 echo "                "
-echo "5- ./desense.sh sensor"
+echo "5- ./desense.sh sensors"
 echo "To check the escrow sensor assets" 
 echo "                "
 echo "                "
@@ -499,14 +499,14 @@ echo "                "
 echo "./desense.sh main" 
 echo "Show main account's info" 
 echo "                "
-echo "./desense.sh escrow"
-echo "Show generated escrow account's info" 
+echo "./desense.sh sensors"
+echo "Show generated sensors escrow account's info" 
 echo "                "
 echo "./desense.sh mainbal"
 echo "Show main account's balance" 
 echo "                "
 echo "./desense.sh escrowbal"
-echo "Show generated escrow account's balance" 
+echo "Show generated sensors escrow account's balance" 
 echo "                "
 
 ;;
