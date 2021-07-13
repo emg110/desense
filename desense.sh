@@ -27,7 +27,9 @@ ESCROW_PROG="./desense-escrow-stateless.teal"
 function getDecoded () { 
     python -c "import sys,base64,json; x=sys.stdin.read().decode('base64').decode('base64'); sys.stdout.write(x)" 
 }
-
+function getDecodedVar () { 
+     echo -n "$1" | python -c "import base64,sys; x= sys.stdin.read().decode('base64').decode('base64'); print(x)"
+}
 case $1 in
 install)
 sudo apt update
@@ -135,7 +137,7 @@ echo "Starting Sensor Sampler environment"
 echo "        "
 sampler -c ./desense-dashboard.yml
 ;;
-asc)
+desense)
 rm -f desense-id.txt
 rm -f desense-escrow-stateless.txt
 rm -f desense-escrow-account.txt
@@ -417,12 +419,25 @@ echo "listing telesense transactions..."
 echo "        "
 curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer"
 ;;
-tslist)
+tslast)
 echo "listing telesensed sensor observations from blockchain..."
 echo "        "
 
 
 echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | last' | getDecoded 
+echo "        "
+echo "        "
+;;
+tslist)
+echo "listing telesensed sensor observations from blockchain..."
+echo "        "
+for i in $(echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] ')
+do
+ getDecodedVar "$i"
+
+done
+
+
 echo "        "
 echo "        "
 ;;
@@ -435,7 +450,7 @@ echo "deSense Guid:"
 echo "                "
 echo "Step by step process flow:"
 echo "                "
-echo "1- ./desense.sh asc" 
+echo "1- ./desense.sh desense" 
 echo "To create deSense stateful smart contract application and stateless smart contract escrow sccount" 
 echo "                "
 echo "2- ./desense.sh fund AMOUNT"
@@ -447,11 +462,14 @@ echo "                "
 echo "4- ./desense.sh sense"
 echo "To generate SENSE Algorand standard asset" 
 echo "                "
-echo "5- ./desense.sh escrow"
-echo "To check the escrow SENSE asset" 
+echo "5- ./desense.sh sensor"
+echo "To check the escrow sensor assets" 
 echo "                "
 echo "                "
-echo "6- ./desense.sh axfer 'ID' or 'auto'"
+echo "6- ./desense.sh tsstart 'ID' or 'auto'"
+echo "To opt-in to last sensor asset (auto) or the one specified with sensor asset ID (you can get it by sensor command)" 
+echo "                "
+echo "6- ./desense.sh telesense 'ID' or 'auto'"
 echo "To transfer (receive) one unit of standard asset with ID (e.g 5). set 'auto' to make everything automated" 
 echo "                "
 echo " -------------------------------------------------               "
