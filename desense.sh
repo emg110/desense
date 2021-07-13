@@ -1,4 +1,3 @@
-
 echo "
    _       ___                    
  _| | ___ / __> ___ ._ _  ___ ___ 
@@ -25,11 +24,14 @@ ACC=$( ${goalcli} account list | awk '{ print $3 }' | tail -1)
 APPROVAL_PROG="./desense-application-statefull.teal"
 CLEAR_PROG="./desense-clear-prog.teal"
 ESCROW_PROG="./desense-escrow-stateless.teal"
-function getJsonVal () { 
-    python -c "import json,sys;sys.stdout.write(json.dumps(json.load(sys.stdin)$1, sort_keys=True, indent=4))"; 
+function getDecoded () { 
+    python -c "import sys,base64; print sys.stdin.read().decode('base64').decode('base64')"; 
 }
 case $1 in
 install)
+sudo apt update
+sudo apt install jq
+echo "jq utilities installed! OK!"
 if [[ ! -d "../sandbox" ]]
 then
     echo "Installing Algorand SandBox environment"
@@ -81,6 +83,13 @@ rm -f desense-escrow-stateless.txt
 rm -f desense-escrow-account.txt
 rm -f desense-escrow-prog-snd.teal
 rm -f desense-main-account.txt
+rm -f *.tx
+rm -f *.rej
+rm -f awk
+rm -f head
+rm -f *.scratch
+rm -f trx-group-sense-signed-dryrun.json
+rm -f sed
 $sandboxcli reset
 ;;
 stop)
@@ -192,6 +201,7 @@ ESCROW_ACC_TRIM="${ESCROW_ACC//$'\r'/ }"
 APP_ID=$(cat "desense-id.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_var); print}')
 APP_ID_TRIM="${APP_ID//$'\r'/ }"
 ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
+NOTEGEN=$(echo -n "{'SENSE': 'generate'}" | base64)
 $sandboxcli copyTo "$ESCROW_PROG_SND"
 echo "Escrow account: $ESCROW_ACC_TRIM"
 echo "Main account: $MAIN_ACC"
@@ -199,7 +209,7 @@ echo "Application ID:$APP_ID_TRIM"
 echo "The asset name: SENSE"
 ${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:sense_cfg" -f ${MAIN_ACC} -o trx-call-app-unsigned.tx
 $sandboxcli copyFrom "trx-call-app-unsigned.tx"
-${goalcli} asset create --creator ${ESCROW_ACC_TRIM} --name "SENSE" --total 999999999999999 --asseturl "https://github.com/emg110/desense" --unitname "SNS" --decimals 6 -o trx-create-sense-unsigned.tx
+${goalcli} asset create --creator ${ESCROW_ACC_TRIM} --name "SENSE" --total 999999999999999 --asseturl "https://github.com/emg110/desense" --unitname "SNS"  --decimals 6 -o trx-create-sense-unsigned.tx --note "{$NOTEGEN}"
 $sandboxcli copyFrom "trx-create-sense-unsigned.tx"
 cat trx-call-app-unsigned.tx trx-create-sense-unsigned.tx > trx-array-sense-unsigned.tx
 $sandboxcli copyTo "trx-array-sense-unsigned.tx"
@@ -262,23 +272,26 @@ APP_ID_TRIM="${APP_ID//$'\r'/ }"
 
 if [ $2 = "auto" ]; then
     ASSET_ID=$(${goalcli} account info -a ${ESCROW_ACC_TRIM} | grep ID | head -n 1 | awk '{ print $2 }')
-    echo "The asset (SENSE) ID selected by auto mode is: ${ASSET_ID%?}"
+    ASSET_ID_FINAL=${ASSET_ID%?}
+    echo "The asset (SENSE) ID selected by auto mode is: ${ASSET_ID_FINAL}"
 else
     
-    ASSET_ID= $2
+    ASSET_ID_FINAL=$2
     echo "Manual asset (SENSE) ID entering mode selected! Asset (SENSE) ID in request to be transfered (one unit only) ${ASSET_ID%?}"
-    echo -ne "${ASSET_ID%?}" > "desense-asset-index.txt" 
+    echo -ne "${ASSET_ID}" > "desense-asset-index.txt" 
 fi
 
 echo "Escrow account: $ESCROW_ACC_TRIM"
 echo "Application ID:$APP_ID_TRIM"
-echo "The asset (SENSE) ID from which 1 (one) unit will be transfered to main account: ${ASSET_ID%?}"
-
-ESCROW_PROG_SND="desense-escrow-stateless-snd.tea"
-${goalcli} asset send --assetid ${ASSET_ID%?} -f ${MAIN_ACC} -t ${MAIN_ACC} -a 0
+echo "The asset (SENSE) ID from which 1 (one) unit will be transfered to main account: ${ASSET_ID_FINAL}"
+NOTEOPT=$(echo -n "{'SENSE': 'optin'}" | base64)
+NOTEACT=$(echo -n "{'SENSE': 'activate'}" | base64)
+echo "${NOTEOPT}"
+ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
+${goalcli} asset send --assetid ${ASSET_ID_FINAL} -f ${MAIN_ACC} -t ${MAIN_ACC} -a 0 --note "${NOTEOPT}"
 ${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:sense-xfer" -f ${MAIN_ACC} -o trx-get-sense-unsigned.tx
 $sandboxcli copyFrom "trx-get-sense-unsigned.tx"
-${goalcli} asset send --assetid ${ASSET_ID%?} -f ${ESCROW_ACC_TRIM} -t ${MAIN_ACC} -a 1 -o trx-send-sense-unsigned.tx
+${goalcli} asset send --assetid ${ASSET_ID_FINAL} -f ${ESCROW_ACC_TRIM} -t ${MAIN_ACC} -a 1 -o trx-send-sense-unsigned.tx --note "${NOTEACT}"
 $sandboxcli copyFrom "trx-send-sense-unsigned.tx"
 cat trx-get-sense-unsigned.tx trx-send-sense-unsigned.tx > trx-array-sense-transfer-unsigned.tx
 $sandboxcli copyTo "trx-array-sense-transfer-unsigned.tx"
@@ -302,12 +315,15 @@ rm -f sed
 ;;
 trxlist)
 echo "listing transactions..."
-curl "localhost:8980/v2/transactions?pretty"
+curl  -s "localhost:8980/v2/transactions?pretty"
 ;;
 axferlist)
-echo "listing transactions..."
+echo "listing notes..."
 
-curl  "localhost:8980/v2/transactions?pretty&tx-type=axfer"   | getJsonVal "['transactions']"
+RES=$(echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | last' | getDecoded)
+
+
+echo $RES
 ;;
 status)
 echo "Getting node status from goal..."
