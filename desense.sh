@@ -33,22 +33,29 @@ install)
 sudo apt update
 sudo apt install jq
 echo "jq utilities installed! OK!"
+echo "        "
 if [[ ! -d "../sandbox" ]]
 then
     echo "Installing Algorand SandBox environment"
+    echo "        "
     git clone https://github.com/algorand/sandbox.git ../sandbox
     echo "Algorand SandBox installed successfully in parent folder (Beside current folder)"
+    echo "        "
 else
   echo "Algorand SandBox is installed OK!"
+  echo "        "
 fi
 if [[ ! -f "/usr/local/bin/sampler" ]]
 then
     echo "Installing Sampler Dashboard environment"
+    echo "        "
     sudo wget https://github.com/sqshq/sampler/releases/download/v1.1.0/sampler-1.1.0-linux-amd64 -O /usr/local/bin/sampler
     sudo chmod +x /usr/local/bin/sampler
     echo "Sampler Dashboard successfully in /usr/local/bin as a program"
+    echo "        "
 else
   echo "Sampler Dashboard is installed OK!"
+  echo "        "
 fi
 if [[ ! -d "../sensor-emulator" ]]
 then
@@ -59,12 +66,15 @@ then
     ./emulator.sh --h
     cd ../desense
     echo "Sensor Emulator installed successfully in parent folder (Beside current folder)"
+    echo "        "
 else
   echo "Sensor Emulator is installed OK!"
+  echo "        "
 fi
 if [[ ! -d "../emitter" ]]
 then
     echo "Installing EmitterIO"
+    echo "        "
     git clone https://github.com/emitter-io/emitter ../emitter
  
     cd ../emitter
@@ -72,13 +82,16 @@ then
     cd ../desense
     ../emitter/emitter
     echo "EmitterIO installed successfully in parent folder (Beside current folder)"
+    echo "        "
 else
   echo "EmitterIO is installed OK!"
+  echo "        "
 fi
 
 ;;
 reset)
 echo "Reseting sandbox environment"
+echo "        "
 rm -f desense-id.txt
 rm -f desense-escrow-stateless.txt
 rm -f desense-escrow-account.txt
@@ -96,25 +109,30 @@ $sandboxcli reset
 ;;
 stop)
 echo "Stopping sandbox environment"
+echo "        "
 $sandboxcli down
 ;;
 startsandbox)
 echo "Starting sandbox environment"
+echo "        "
 $sandboxcli up
 ;;
 startemitter)
 echo "Starting EmitterIO environment"
-
+echo "        "
 ../emitter/emitter
 ;;
 startemulator)
 echo "Starting Sensor Emulator environment"
+echo "        "
 echo "If this is the first run, the generated license and secret key are shown, please take note of them both and open your browser and go to http://127.0.0.1:8080/keygen and generate channels and channel keys using the secret key you just noted. Do not forget to set EMITTER_LICENSE env variable before start after this run which gave you the keys to make the generated license work!"
+echo "        "
 cp sensor-template-config.json ../sensor-emulator
 cd ../sensor-emulator && ./emulator.sh --DS --run  --config-file=sensor-template-config.json
 ;;
 startsampler)
 echo "Starting Sensor Sampler environment"
+echo "        "
 sampler -c ./desense-dashboard.yml
 ;;
 asc)
@@ -136,6 +154,7 @@ APP=$(
     awk '{ print $NF }'
 )
 echo -ne "${APP}" > "desense-id.txt"
+echo "        "
 cat $ESCROW_PROG | awk -v awk_var=${APP} '{ gsub("appIdParam", awk_var); print}' | awk -v awk_var=${ACC} '{ gsub("SENSEAddr", awk_var); print}' > "desense-escrow-stateless-snd.teal"
 ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
 $sandboxcli copyTo "$ESCROW_PROG_SND"
@@ -143,9 +162,13 @@ ESCROW_ACCOUNT=$(
   ${goalcli} clerk compile -a ${ACC} -n ${ESCROW_PROG_SND} | awk '{ print $2 }' | head -n 1
 )
 echo -ne "${ACC}" > "desense-main-account.txt"
+echo "        "
 echo -ne "${ESCROW_ACCOUNT}" > "desense-escrow-account.txt"
+echo "        "
 echo "Stateful Application ID $APP"
+echo "        "
 echo "Stateless Escrow Account = ${ESCROW_ACCOUNT}"
+echo "        "
 ;;
 fund)
 AMOUNT=$2
@@ -156,32 +179,41 @@ ${goalcli} clerk send -a ${AMOUNT} -f "${MAIN_ACC}" --to ${ESCROW_ACC_TRIM}
 ;;
 escrowbal)
 echo "Getting the escrow account balance..."
+echo "        "
 ESCROW_ACC=$(cat "desense-escrow-account.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_var); print}')
 ESCROW_ACC_TRIM="${ESCROW_ACC//$'\r'/ }"
 echo "Escrfow account:$ESCROW_ACC_TRIM" 
+echo "        "
 ${goalcli} account balance -a $ESCROW_ACC_TRIM
 ;;
 mainbal)
 echo "Getting the main account balance..."
+echo "        "
 MAIN_ACC=$(<desense-main-account.txt)
 echo "Main account:$MAIN_ACC" 
+echo "        "
 ${goalcli} account balance -a $MAIN_ACC
 ;;
 escrow)
 echo "Getting the escrow account info..."
+echo "        "
 ESCROW_ACC=$(cat "desense-escrow-account.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_var); print}')
 ESCROW_ACC_TRIM="${ESCROW_ACC//$'\r'/ }"
-echo "Escrow account:$ESCROW_ACC_TRIM" 
+echo "Escrow account:$ESCROW_ACC_TRIM"
+echo "        " 
 ${goalcli} account info -a $ESCROW_ACC_TRIM
 ;;
 main)
 echo "Getting the main account info..."
+echo "        "
 MAIN_ACC=$(<desense-main-account.txt)
 echo "Main account:$MAIN_ACC" 
+echo "        "
 ${goalcli} account info -a $MAIN_ACC
 ;;
 link)
 echo "Linking stateless escrow account to stateful smart contract"
+echo "        "
 MAIN_ACC=$(<desense-main-account.txt)
 ESCROW_ACC=$(cat "desense-escrow-account.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_var); print}')
 ESCROW_ACC_TRIM="${ESCROW_ACC//$'\r'/ }"
@@ -189,14 +221,17 @@ ESCROW_ACC_TRIMM="${ESCROW_ACC//$'\n'/ }"
 APP_ID=$(cat "desense-id.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_var); print}')
 APP_ID_TRIM="${APP_ID//$'\r'/ }"
 echo "Escrow account: $ESCROW_ACC_TRIMM"
+echo "        "
 echo "Main account:$MAIN_ACC"
+echo "        "
 echo "Application ID:$APP_ID_TRIM"
+echo "        "
 ${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:escrow_set" --app-arg "addr:${ESCROW_ACC_TRIMM}" -f ${MAIN_ACC}
 ${goalcli} app read --app-id ${APP_ID_TRIM} --guess-format --global --from ${MAIN_ACC}
 ;;
 sense)
 echo "Generating SENSE Standard Asset..."
-
+echo "        "
 MAIN_ACC=$(<desense-main-account.txt)
 ESCROW_ACC=$(cat "desense-escrow-account.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_var); print}')
 ESCROW_ACC_TRIM="${ESCROW_ACC//$'\r'/ }"
@@ -206,9 +241,13 @@ ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
 NOTEGEN=$(echo -n "{'SENSE': 'generate'}" | base64)
 $sandboxcli copyTo "$ESCROW_PROG_SND"
 echo "Escrow account: $ESCROW_ACC_TRIM"
+echo "        "
 echo "Main account: $MAIN_ACC"
+echo "        "
 echo "Application ID:$APP_ID_TRIM"
+echo "        "
 echo "The asset name: SENSE"
+echo "        "
 ${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:sense_cfg" -f ${MAIN_ACC} -o trx-call-app-unsigned.tx
 $sandboxcli copyFrom "trx-call-app-unsigned.tx"
 ${goalcli} asset create --creator ${ESCROW_ACC_TRIM} --name "SENSE" --total 999999999999999 --asseturl "https://github.com/emg110/desense" --unitname "SNS"  --decimals 6 -o trx-create-sense-unsigned.tx --note "{$NOTEGEN}"
@@ -227,6 +266,7 @@ $sandboxcli copyFrom "trx-sense-signed-index-1.tx"
 cat trx-sense-signed-index-0.tx trx-sense-signed-index-1.tx > trx-group-sense-signed.tx
 $sandboxcli copyTo "trx-group-sense-signed.tx"
 echo "Sending signed transaction group with clerk..."
+echo "        "
 ${goalcli} clerk rawsend -f trx-group-sense-signed.tx
 rm -f *.tx
 rm -f *.rej
@@ -240,32 +280,39 @@ rm -f python
 
 dryrun)
 echo "Creating Dry-run dump from signed transaction group..."
+echo "        "
 ${goalcli} clerk dryrun -t trx-group-sense-signed.tx --dryrun-dump -o trx-group-sense-signed-dryrun.json
 $sandboxcli copyFrom "trx-group-sense-signed-dryrun.json"
 echo "Dryrun dump JSON file generated successfully!"
+echo "        "
 ;;
 
 drapproval)
 echo "Dry-running signed approval program with signed transaction group ..."
+echo "        "
 ${goalcli} clerk dryrun -t trx-group-sense-signed.tx --dryrun-dump -o trx-group-sense-signed-dryrun.json
 $sandboxcli copyFrom "trx-group-sense-signed-dryrun.json"
 cd "../" && docker exec -it algorand-sandbox-algod  tealdbg debug ${APPROVAL_PROG} -f cdt --listen 0.0.0.0 -d trx-group-sense-signed-dryrun.json --group-index 0
 echo "The Dry run JSON file is running to check Approval Smart Contract"
+echo "        "
 cd desense
 
 
 ;;
 drescrow)
 echo "Dry-running signed approval program with signed transaction group..."
+echo "        "
 ${goalcli} clerk dryrun -t trx-group-sense-signed.tx --dryrun-dump -o trx-group-sense-signed-dryrun.json
 $sandboxcli copyFrom "trx-group-sense-signed-dryrun.json"
 cd "../" && docker exec -it  algorand-sandbox-algod tealdbg debug ${ESCROW_PROG_SND} -f cdt --listen 0.0.0.0 -d trx-group-sense-signed-dryrun.json
 echo "The Dry run JSON file is running to check Stateful Approval Smart Contract..."
+echo "        "
 cd desense
 ;;
 
-axfer)
-echo "Receiving Standard Asset..."
+tsstart)
+echo "Starting Telesense (Opt-in to Sensor Asset)..."
+echo "        "
 MAIN_ACC=$(<desense-main-account.txt)
 ESCROW_ACC=$(cat "desense-escrow-account.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_var); print}')
 ESCROW_ACC_TRIM="${ESCROW_ACC//$'\r'/ }"
@@ -277,24 +324,71 @@ if [ $2 = "auto" ]; then
     ASSET_ID=$(${goalcli} account info -a ${ESCROW_ACC_TRIM} | grep ID | head -n 1 | awk '{ print $2 }')
     ASSET_ID_FINAL=${ASSET_ID%?}
     echo "The asset (SENSE) ID selected by auto mode is: ${ASSET_ID_FINAL}"
+    echo "        "
 else
     
     ASSET_ID_FINAL=$2
     echo "Manual asset (SENSE) ID entering mode selected! Asset (SENSE) ID in request to be transfered (one unit only) ${ASSET_ID%?}"
+    echo "        "
     echo -ne "${ASSET_ID}" > "desense-asset-index.txt" 
+    echo "        "
 fi
 
 echo "Escrow account: $ESCROW_ACC_TRIM"
+echo "        "
 echo "Application ID:$APP_ID_TRIM"
-echo "The asset (SENSE) ID from which 1 (one) unit will be transfered to main account: ${ASSET_ID_FINAL}"
-NOTEOPT=$(printf '{"sense": "optin"}' | base64)
-NOTEACT=$(printf '{"sense": "activate"}' | base64)
-echo "${NOTEOPT}"
-ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
+echo "        "
+echo "The asset (SENSE) ID to opt-into: ${ASSET_ID_FINAL}"
+echo "        "
+
+NOTEOPT=$(printf '{"sense": "optin", "temprature": "0", "voltage": "0", "current": "0"}' | base64)
 ${goalcli} asset send --assetid ${ASSET_ID_FINAL} -f ${MAIN_ACC} -t ${MAIN_ACC} -a 0 --note "${NOTEOPT}"
+
+rm -f *.tx
+rm -f *.rej
+rm -f awk
+rm -f head
+rm -f *.scratch
+rm -f sed
+rm -f python
+;;
+telesense)
+echo "Telesensing Sensor Asset..."
+echo "        "
+MAIN_ACC=$(<desense-main-account.txt)
+ESCROW_ACC=$(cat "desense-escrow-account.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_var); print}')
+ESCROW_ACC_TRIM="${ESCROW_ACC//$'\r'/ }"
+APP_ID=$(cat "desense-id.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_var); print}')
+APP_ID_TRIM="${APP_ID//$'\r'/ }"
+
+
+if [ $2 = "auto" ]; then
+    ASSET_ID=$(${goalcli} account info -a ${ESCROW_ACC_TRIM} | grep ID | head -n 1 | awk '{ print $2 }')
+    ASSET_ID_FINAL=${ASSET_ID%?}
+    echo "The asset (SENSE) ID selected by auto mode is: ${ASSET_ID_FINAL}"
+    echo "        "
+else
+    
+    ASSET_ID_FINAL=$2
+    echo "Manual asset (SENSE) ID entering mode selected! Asset (SENSE) ID in request to be transfered (one unit only) ${ASSET_ID%?}"
+    echo "        "
+    echo -ne "${ASSET_ID}" > "desense-asset-index.txt" 
+    echo "        "
+fi
+
+echo "Escrow account: $ESCROW_ACC_TRIM"
+echo "        "
+echo "Application ID:$APP_ID_TRIM"
+echo "        "
+echo "The asset (SENSE) ID from which 1 (one) unit will be transfered to main account: ${ASSET_ID_FINAL}"
+echo "        "
+NOTEOPT=$(printf '{"sense": "optin", "temprature": "0", "voltage": "0", "current": "0"}' | base64)
+NOTEACT=$(printf '{"sense": "activate", "temprature": "24", "voltage": "220", "current": "1100"}' | base64)
+echo "        "
+ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
 ${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:sense-xfer" -f ${MAIN_ACC} -o trx-get-sense-unsigned.tx
 $sandboxcli copyFrom "trx-get-sense-unsigned.tx"
-${goalcli} asset send --assetid ${ASSET_ID_FINAL} -f ${ESCROW_ACC_TRIM} -t ${MAIN_ACC} -a 1 -o trx-send-sense-unsigned.tx --note "${NOTEACT}"
+${goalcli} asset send --assetid ${ASSET_ID_FINAL} -f ${ESCROW_ACC_TRIM} -t ${MAIN_ACC} -a 1000 -o trx-send-sense-unsigned.tx --note "${NOTEACT}"
 $sandboxcli copyFrom "trx-send-sense-unsigned.tx"
 cat trx-get-sense-unsigned.tx trx-send-sense-unsigned.tx > trx-array-sense-transfer-unsigned.tx
 $sandboxcli copyTo "trx-array-sense-transfer-unsigned.tx"
@@ -308,6 +402,7 @@ $sandboxcli copyFrom "trx-sense-transfer-signed-index-1.tx"
 cat trx-sense-transfer-signed-index-0.tx trx-sense-transfer-signed-index-1.tx > trx-group-sense-transfer-signed.tx
 $sandboxcli copyTo "trx-group-sense-transfer-signed.tx"
 echo "Transfering one unit of SENSE with clerk"
+echo "        "
 ${goalcli} clerk rawsend -f trx-group-sense-transfer-signed.tx 
 rm -f *.tx
 rm -f *.rej
@@ -317,16 +412,19 @@ rm -f *.scratch
 rm -f sed
 rm -f python
 ;;
-trxlist)
-echo "listing transactions..."
+tstrxlist)
+echo "listing telesense transactions..."
+echo "        "
 curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer"
 ;;
-axferlist)
-echo "listing notes..."
+tslist)
+echo "listing telesensed sensor observations from blockchain..."
+echo "        "
 
 
-
-echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | first' | getDecoded | jq '.sense'
+echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | last' | getDecoded 
+echo "        "
+echo "        "
 ;;
 status)
 echo "Getting node status from goal..."
