@@ -17,11 +17,11 @@ runcharts:
     items:
       - label: Voltage
         color: 178
-        sample: echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | last' | python -c "import sys,base64,json; x=sys.stdin.read().decode('base64').decode('base64'); sys.stdout.write(x)"  | jq '.voltage' | sed -e 's/^"//' -e 's/"$//'
+        sample: echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | last' | python -c "import sys,base64,json; x=sys.stdin.read().decode('base64'); sys.stdout.write(x[2:])"  | jq '.voltage' | sed -e 's/^"//' -e 's/"$//'
       - label: Temprature
-        sample: echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | last' | python -c "import sys,base64,json; x=sys.stdin.read().decode('base64').decode('base64'); sys.stdout.write(x)"  | jq '.temprature' | sed -e 's/^"//' -e 's/"$//'
+        sample: echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | last' | python -c "import sys,base64,json; x=sys.stdin.read().decode('base64'); sys.stdout.write(x[2:])"  | jq '.temprature' | sed -e 's/^"//' -e 's/"$//'
       - label: Current
-        sample: echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | last' | python -c "import sys,base64,json; x=sys.stdin.read().decode('base64').decode('base64'); sys.stdout.write(x)"  | jq '.current' |  sed -e 's/^"//' -e 's/"$//'
+        sample: echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | last' | python -c "import sys,base64,json; x=sys.stdin.read().decode('base64'); sys.stdout.write(x[2:])"  | jq '.current' |  sed -e 's/^"//' -e 's/"$//'
 barcharts:
   - title: Sensor network blockchain activity
     position: [[45, 20], [35, 8]]
@@ -39,19 +39,19 @@ gauges:
   - title: Voltage
     position: [[45, 0], [35, 2]]
     cur:
-        sample: date +%j
+        sample: echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | last' | python -c "import sys,base64,json; x=sys.stdin.read().decode('base64'); sys.stdout.write(x[2:])"  | jq '.voltage' | sed -e 's/^"//' -e 's/"$//'
     max:
-        sample: echo 365
+        sample: echo 280
     min:
-        sample: echo 0
+        sample: echo 110
   - title: Current
     position: [[45, 3], [35, 2]]
     cur:
-        sample: date +%H
+        sample: echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[].note] | last' | python -c "import sys,base64,json; x=sys.stdin.read().decode('base64'); sys.stdout.write(x[2:])"  | jq '.current' |  sed -e 's/^"//' -e 's/"$//'
     max:
-        sample: echo 24
+        sample: echo 1500
     min:
-        sample: echo 0
+        sample: echo 900
 
 
 sparklines:

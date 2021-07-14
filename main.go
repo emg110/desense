@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 	"fmt"
+	"os"
 	"encoding/json"
 	"github.com/algorand/go-algorand-sdk/client/algod"
 	"github.com/algorand/go-algorand-sdk/client/kmd"
@@ -27,7 +28,7 @@ type Tracks struct {
 	iss_position Track_attr_position
 }
 func main() {
-	
+	arg := os.Args[1]
 	algodClient, err := algod.MakeClient(algodAddress, algodToken)
 	if err != nil {
 		return

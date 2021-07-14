@@ -25,10 +25,10 @@ APPROVAL_PROG="./desense-application-statefull.teal"
 CLEAR_PROG="./desense-clear-prog.teal"
 ESCROW_PROG="./desense-escrow-stateless.teal"
 function getDecoded () { 
-    python -c "import sys,base64,json; x=sys.stdin.read().decode('base64').decode('base64'); sys.stdout.write(x)" 
+    python -c "import sys,base64,json; x=sys.stdin.read().decode('base64'); sys.stdout.write(x)" 
 }
 function getDecodedVar () { 
-     echo -n "$1" | python -c "import base64,sys; x= sys.stdin.read().decode('base64').decode('base64'); print(x)"
+     echo -n "$1" | python -c "import base64,sys; x= sys.stdin.read().decode('base64'); print(x)"
 }
 case $1 in
 install)
@@ -385,8 +385,8 @@ echo "Application ID:$APP_ID_TRIM"
 echo "        "
 echo "The asset (SENSE) ID from which 1000 micro sense unit will be transfered to main account: ${ASSET_ID_FINAL}"
 echo "        "
-NOTEOPT=$(printf '{"sense": "optin", "temprature": "0", "voltage": "0", "current": "0"}' | base64)
-NOTEACT=$(printf '{"sense": "activate", "temprature": "24", "voltage": "220", "current": "1100"}' | base64)
+NOTEOPT=$(printf '{"temprature": "0", "voltage": "0", "current": "0"}')
+NOTEACT=$(printf '{"sense": "activate", "temprature": "24", "voltage": "220", "current": "1100"}')
 echo "        "
 ESCROW_PROG_SND="desense-escrow-stateless-snd.teal"
 ${goalcli} app call --app-id ${APP_ID_TRIM} --app-arg "str:sense-xfer" -f ${MAIN_ACC} -o trx-get-sense-unsigned.tx
