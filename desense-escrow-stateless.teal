@@ -6,7 +6,7 @@ txn AssetCloseTo
 global ZeroAddress
 ==
 txn AssetAmount
-int 1
+int 1000
 ==
 &&
 assert

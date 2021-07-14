@@ -124,13 +124,14 @@ echo "Starting EmitterIO environment"
 echo "        "
 ../emitter/emitter
 ;;
+
 startemulator)
 echo "Starting Sensor Emulator environment"
 echo "        "
 echo "If this is the first run, the generated license and secret key are shown, please take note of them both and open your browser and go to http://127.0.0.1:8080/keygen and generate channels and channel keys using the secret key you just noted. Do not forget to set EMITTER_LICENSE env variable before start after this run which gave you the keys to make the generated license work!"
 echo "        "
 cp sensor-template-config.json ../sensor-emulator
-cd ../sensor-emulator && ./emulator.sh --DS --run  --config-file=sensor-template-config.json
+cd ../sensor-emulator && ./emulator.sh --run  --config-file=sensor-template-config.json --sense --appid=1 --assetid=5
 ;;
 startsampler)
 echo "Starting Sensor Sampler environment"
@@ -169,7 +170,7 @@ echo -ne "${ESCROW_ACCOUNT}" > "desense-escrow-account.txt"
 echo "        "
 echo "Stateful Application ID $APP"
 echo "        "
-echo "Stateless Escrow Account = ${ESCROW_ACCOUNT}"
+echo "Stateless Sensor Escrow Account = ${ESCROW_ACCOUNT}"
 echo "        "
 ;;
 fund)
@@ -179,12 +180,12 @@ ESCROW_ACC=$(cat "desense-escrow-account.txt" | head -n 1 | awk -v awk_var='' '{
 ESCROW_ACC_TRIM="${ESCROW_ACC//$'\r'/ }"
 ${goalcli} clerk send -a ${AMOUNT} -f "${MAIN_ACC}" --to ${ESCROW_ACC_TRIM}
 ;;
-escrowbal)
-echo "Getting the escrow account balance..."
+sensorbal)
+echo "Getting the sensor escrow account balance..."
 echo "        "
 ESCROW_ACC=$(cat "desense-escrow-account.txt" | head -n 1 | awk -v awk_var='' '{ gsub(" ", awk_var); print}')
 ESCROW_ACC_TRIM="${ESCROW_ACC//$'\r'/ }"
-echo "Escrfow account:$ESCROW_ACC_TRIM" 
+echo "Sensor escrfow account:$ESCROW_ACC_TRIM" 
 echo "        "
 ${goalcli} account balance -a $ESCROW_ACC_TRIM
 ;;
@@ -312,7 +313,7 @@ echo "        "
 cd desense
 ;;
 
-tsstart)
+senseopt)
 echo "Starting Telesense (Opt-in to Sensor Asset)..."
 echo "        "
 MAIN_ACC=$(<desense-main-account.txt)
@@ -330,7 +331,7 @@ if [ $2 = "auto" ]; then
 else
     
     ASSET_ID_FINAL=$2
-    echo "Manual asset (SENSE) ID entering mode selected! Asset (SENSE) ID in request to be transfered (one unit only) ${ASSET_ID%?}"
+    echo "Manual asset (SENSE) ID entering mode selected! Asset (SENSE) ID in request to be transfered (1000 micro sense only) ${ASSET_ID%?}"
     echo "        "
     echo -ne "${ASSET_ID}" > "desense-asset-index.txt" 
     echo "        "
@@ -372,7 +373,7 @@ if [ $2 = "auto" ]; then
 else
     
     ASSET_ID_FINAL=$2
-    echo "Manual asset (SENSE) ID entering mode selected! Asset (SENSE) ID in request to be transfered (one unit only) ${ASSET_ID%?}"
+    echo "Manual asset (SENSE) ID entering mode selected! Asset (SENSE) ID in request to be transfered (1000 micro sense only) ${ASSET_ID%?}"
     echo "        "
     echo -ne "${ASSET_ID}" > "desense-asset-index.txt" 
     echo "        "
@@ -382,7 +383,7 @@ echo "Escrow account: $ESCROW_ACC_TRIM"
 echo "        "
 echo "Application ID:$APP_ID_TRIM"
 echo "        "
-echo "The asset (SENSE) ID from which 1 (one) unit will be transfered to main account: ${ASSET_ID_FINAL}"
+echo "The asset (SENSE) ID from which 1000 micro sense unit will be transfered to main account: ${ASSET_ID_FINAL}"
 echo "        "
 NOTEOPT=$(printf '{"sense": "optin", "temprature": "0", "voltage": "0", "current": "0"}' | base64)
 NOTEACT=$(printf '{"sense": "activate", "temprature": "24", "voltage": "220", "current": "1100"}' | base64)
@@ -466,11 +467,11 @@ echo "5- ./desense.sh sensors"
 echo "To check the escrow sensor assets" 
 echo "                "
 echo "                "
-echo "6- ./desense.sh tsstart 'ID' or 'auto'"
+echo "6- ./desense.sh senseopt 'ID' or 'auto'"
 echo "To opt-in to last sensor asset (auto) or the one specified with sensor asset ID (you can get it by sensor command)" 
 echo "                "
 echo "6- ./desense.sh telesense 'ID' or 'auto'"
-echo "To transfer (receive) one unit of standard asset with ID (e.g 5). set 'auto' to make everything automated" 
+echo "To transfer (receive) 1000 micro unit of standard asset with ID (e.g 5). set 'auto' to make everything automated" 
 echo "                "
 echo " -------------------------------------------------               "
 echo "Sandbox commands:"
@@ -505,7 +506,7 @@ echo "                "
 echo "./desense.sh mainbal"
 echo "Show main account's balance" 
 echo "                "
-echo "./desense.sh escrowbal"
+echo "./desense.sh sensorbal"
 echo "Show generated sensors escrow account's balance" 
 echo "                "
 
