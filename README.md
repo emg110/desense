@@ -5,6 +5,10 @@
 # Monash University Bloackchain Hackathon 2021
 This repository contains the code, content and demo material for participation of [@emg110](https://github.com/emg110) and [@sheghzo](https://github.com/sheghzo) in Monash Blockchain Hackathon 2021.
 
+## IMPORTANT NOTE:
+
+### This library and the main solution deSense are made as proof of concept development projects with production and enterprise in mind, so all teal programs included are consisted of simple `int 1` code to pass everything which suites the development enviromnet where the possibility of implementation is the target not showing off TEAL capabilities which are huge but off the subject for this library.
+
 ## Usefull links
 
 > [Monash University](https://www.monash.edu)
