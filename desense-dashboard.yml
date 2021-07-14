@@ -29,11 +29,11 @@ barcharts:
     scale: 0
     items:
       - label: SENSE TRANSFER TXN
-        sample: echo "10000" | awk '{print $1}'
+        sample: echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=axfer")  | jq '[.transactions[]] | length' 
       - label: SENSE APP CALL TXN
-        sample:  echo "10000" | awk '{print $1}'
+        sample:  echo -n $(curl  -s "localhost:8980/v2/transactions?pretty&tx-type=appl")  | jq '[.transactions[]] | length'  | awk '{print $1}'
       - label: SENSE TOTAL TXN
-        sample:  echo "10000" | awk '{print $1}'
+        sample:  echo -n $(curl  -s "localhost:8980/v2/transactions?pretty")  | jq '[.transactions[]] | length'  | awk '{print $1}'
   
 gauges:
   - title: Voltage
