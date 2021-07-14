@@ -3,12 +3,15 @@
     "publish":{
     "serverAddress": "localhost",
     "port": 8080,
-    "license": "PfA8IFBdtuVTr0jVVxHEI8uCYkoqt5wv6JMX3ooP_URrjwfwEAQkzNjfhs6n-eBy4NZzx5fp2cKtA-b08JYOAQ:3",
-    "key":"bAsp5Kwp3BzXObBmjHl8erlN4_-FxYMj",
+    "license": "PfA8IGu-JfVX09YMw-JVxmg3OYHmaxs1Ixgjxy5meFbg3eB1EPBXaNsTozr9tEESGdf3KJGq5uCoCuXXno8IAQ:3",
+    "key":"dbIH-cfTpsvsi6OW52exATmiFY5F2FUU",
     "channel": "desense/",
     "algodToken":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "algodServer":"http://localhost",
     "algodPort":"4001",
+    "assetID":"5",
+    "sensoracc":"EMVOV33OQTWYLRYCXTJPOESB7IUZ6RY5QUBX3HC266SJPLMRZDVOBGRUZU",
+    "wallet":"custom motion wing force come gun advance wrong copy illegal reunion chat float wisdom add tool hood digital merge miss swarm culture into abandon wrong",
     "secure": false,
     "tls": {
           "key": "./path_to_private_key",
