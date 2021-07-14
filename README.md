@@ -13,6 +13,8 @@ This repository contains the code, content and demo material for participation o
 
 > [Algorand](https://www.algorand.com/)
 
+> [Sensor Emulator](https://github.com/emg110/sensor-emulator)
+
 ## Technical notes
 
 > Run `./desense.sh help` to see available flows and commands
@@ -53,7 +55,11 @@ Use the channel key you just received from keygen and set it in key configuratio
 
 ## Presentation Video
 
-> [![deSense Presentation Poster](./assets/desense-dashboard.png)](./assets/dSense-video-presentation.webm)
+> [![deSense Presentation Video](./assets/desense-dashboard.png)](./assets/dSense-video-presentation.webm)
+
+## Sensor Emulator Screen Cast
+
+> ![Senor Emulator Screencast Telesensing to Algorand blockchain and gives Transaction ID out](./assets/sensor_emulator.gif)
 
 ## Based on amazing libraries and examples of
 
