@@ -48,10 +48,6 @@ Use the channel key you just received from keygen and set it in key configuratio
 
 > ![deSense UseCase Diagram](./assets/deSense%20UseCase.png)
 
-## Presentation Poster
-
-> ![deSense Presentation Poster](./assets/dSense%20Presentation%20Poster.png)
-
 ## Presentation Video
 
 > [![deSense Presentation Video](./assets/desense-dashboard.png)](./assets/dSense-video-presentation.webm)
