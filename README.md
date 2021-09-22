@@ -71,4 +71,4 @@ Use the channel key you just received from keygen and set it in key configuratio
 
 > [Sampler](https://github.com/sqshq/sampler)
 
-> [mqtt-emulator](https://github.com/dojot/mqtt-emulator)-----> Forked and extensively modified & overhauled version created just for this Hackathon [sensor-emulator](https://github.com/emg110/sensor-emulator)
+> [mqtt-emulator](https://github.com/dojot/mqtt-emulator)-----> Forked and extensively modified & overhauled version created just for this Hackathon [sensor-emulator](https://github.com/emg110/sensor-emulator).
